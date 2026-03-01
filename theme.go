@@ -368,6 +368,27 @@ tooltip label {
   font-size: 10px;
   color: %[3]s;
 }
+
+headerbar button {
+  min-width: 36px;
+  min-height: 36px;
+  border-radius: 0;
+}
+
+headerbar button:not(.titlebutton) {
+  padding: 0;
+}
+
+.action-btn {
+  min-width: 36px;
+  min-height: 36px;
+  padding: 0;
+}
+
+.action-btn > * {
+  min-width: 20px;
+  min-height: 20px;
+}
 `,
 		EnsureHex(c.Bg), EnsureHex(c.Bg2), EnsureHex(c.Fg),
 		EnsureHex(c.Muted), EnsureHex(c.Accent), EnsureHex(c.Border),
