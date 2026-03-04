@@ -23,7 +23,7 @@ func NewSmoothScroller(scroll *gtk.ScrolledWindow, target *gtk.Widget) *Scroller
 
 	ctrl := gtk.NewEventControllerScroll(gtk.EventControllerScrollVertical)
 	ctrl.ConnectScroll(func(dx, dy float64) bool {
-		s.Velocity += dy * 12
+		s.Velocity += dy * 14
 		if s.InertiaTimer == 0 {
 			s.InertiaTimer = glib.TimeoutAdd(16, func() bool {
 				adj := s.Scroll.VAdjustment()
@@ -32,7 +32,7 @@ func NewSmoothScroller(scroll *gtk.ScrolledWindow, target *gtk.Widget) *Scroller
 				current := adj.Value()
 
 				if (current <= min && s.Velocity < 0) || (current >= max && s.Velocity > 0) {
-					s.Overshoot -= s.Velocity * 0.5
+					s.Overshoot -= s.Velocity * 0.4
 					s.Velocity *= 0.6
 				}
 
@@ -48,7 +48,7 @@ func NewSmoothScroller(scroll *gtk.ScrolledWindow, target *gtk.Widget) *Scroller
 				}
 
 				adj.SetValue(current + s.Velocity)
-				s.Velocity *= 0.92
+				s.Velocity *= 0.90
 
 				if math.Abs(s.Overshoot) > 0 && s.MarginTarget != nil {
 					if s.Overshoot > 0 {

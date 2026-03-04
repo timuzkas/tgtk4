@@ -46,6 +46,8 @@ func BuildBaseCSS(c Colors) string {
   outline-width: 0;
   box-shadow: none;
   -gtk-outline-radius: 0;
+  transition-property: background-color, border-color, opacity, transform;
+  transition-duration: 200ms;
 }
 
 *:focus {
@@ -58,23 +60,24 @@ window {
 }
 
 headerbar {
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.6);
   background-image: none;
   border-bottom: 1px solid %[6]s;
-  min-height: 64px;
-  padding: 0 16px;
+  min-height: 48px;
+  padding: 0 8px;
 }
 
 headerbar label.title {
   color: %[5]s;
   font-family: "JetBrains Mono", monospace;
-  font-weight: 700;
-  font-size: 10px;
-  letter-spacing: 0.15em;
+  font-weight: 800;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
 }
 
-/* Slightly Darker Buttons */
-.action-btn, .conv-btn, .mini-action-btn, button {
+/* Cyber Buttons - PERFECTLY SQUARE & CENTERED */
+.action-btn, .mini-action-btn, button {
   background-color: #0c0c0c;
   background-image: none;
   border: 1px solid %[6]s;
@@ -83,23 +86,53 @@ headerbar label.title {
   font-size: 9px;
   font-weight: 600;
   color: %[4]s;
-  padding: 6px 12px;
+  padding: 0;
+  margin: 0;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: none;
   outline: none;
+  min-width: 36px;
+  min-height: 36px;
 }
 
 .action-btn:hover, .mini-action-btn:hover, button:hover {
   color: %[3]s;
   background-color: #121212;
-  background-image: none;
   border-color: %[5]s;
-  box-shadow: none;
 }
 
 .action-btn:active, button:active {
   background-color: #080808;
-  transform: scale(0.98);
+  transform: scale(0.92);
+}
+
+/* Center icons in buttons */
+button image {
+  margin: 0;
+  padding: 0;
+}
+
+headerbar button {
+  margin: 4px;
+}
+
+/* Inputs */
+entry {
+  background-color: #080808;
+  border: 1px solid %[6]s;
+  border-radius: 0;
+  color: %[3]s;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  padding: 12px 16px;
+  caret-color: %[5]s;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+entry:focus {
+  border-color: %[5]s;
+  background-color: #0c0c0c;
+  box-shadow: 0 0 16px rgba(224, 78, 42, 0.08);
 }
 
 dropdown {
@@ -130,10 +163,16 @@ dropdown > button {
 
 popover > contents {
   background-color: %[2]s;
-  border: 1px solid %[6]s;
+  border: 1px solid %[5]s;
   border-radius: 0;
   padding: 0;
-  box-shadow: none;
+  box-shadow: 0 16px 32px rgba(0,0,0,0.6);
+  animation: popover-in 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes popover-in {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 popover listview, popover listitem {
@@ -146,6 +185,7 @@ popover listitem:hover {
   color: %[1]s;
 }
 
+/* Fundamental Cyber Widgets */
 checkbutton {
   color: %[4]s;
   font-family: "JetBrains Mono", monospace;
@@ -172,6 +212,48 @@ checkbutton:checked check {
   border-color: %[5]s;
 }
 
+switch {
+  background-color: #0c0c0c;
+  border: 1px solid %[6]s;
+  border-radius: 0;
+  min-width: 32px;
+  min-height: 16px;
+  transition: all 0.2s ease;
+}
+
+switch:checked {
+  background-color: %[5]s;
+  border-color: %[5]s;
+}
+
+switch slider {
+  background-color: %[4]s;
+  border: 1px solid %[6]s;
+  border-radius: 0;
+  min-width: 14px;
+  min-height: 14px;
+  margin: 1px;
+}
+
+switch:checked slider {
+  background-color: %[2]s;
+}
+
+/* Row Styling */
+.setting-row {
+  padding: 14px 16px;
+  border-bottom: 1px solid %[6]s;
+}
+
+.setting-label {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: %[4]s;
+  text-transform: uppercase;
+}
+
 progressbar trough {
   background-color: rgba(0, 0, 0, 0.2);
   min-height: 4px;
@@ -186,42 +268,6 @@ progressbar progress {
   border: none;
   min-height: 0;
   min-width: 0;
-}
-
-/* Button-as-Progressbar styles */
-.conv-btn {
-  padding: 0 !important;
-  overflow: hidden;
-}
-
-.conv-btn overlay {
-  min-width: 140px;
-  min-height: 44px;
-}
-
-.conv-btn progressbar {
-  transition: all 0.2s ease;
-}
-
-.conv-btn progressbar trough {
-  background-color: transparent;
-  min-height: 44px;
-}
-
-.conv-btn progressbar progress {
-  min-height: 44px;
-  background-color: %[5]s;
-}
-
-.conv-btn label {
-  color: %[5]s;
-  z-index: 10;
-  /* Use a bit of shadow for legibility if needed, or just switch color */
-}
-
-.conv-btn.processing label {
-  color: #ffffff;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
 }
 
 progressbar {
@@ -277,14 +323,15 @@ scale:hover slider {
 .status-bar {
   background-color: %[2]s;
   border-top: 1px solid %[6]s;
-  padding: 4px 16px;
+  padding: 6px 16px;
 }
 
 .status-bar label {
   font-family: "JetBrains Mono", monospace;
   font-size: 8px;
-  font-weight: 500;
+  font-weight: 600;
   color: %[4]s;
+  letter-spacing: 0.05em;
 }
 
 .drop-zone {
@@ -332,12 +379,12 @@ overlay:hover .overlay-actions {
 }
 
 .pop-in {
-  animation: pop-in 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  animation: pop-in 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
 @keyframes pop-in {
-  0% { transform: scale(0.97); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
+  0% { transform: translateY(12px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
 }
 
 .ripple-react {
@@ -358,9 +405,9 @@ scrollbar slider {
 
 tooltip {
   background-color: %[2]s;
-  border: 1px solid %[6]s;
+  border: 1px solid %[5]s;
   border-radius: 0;
-  padding: 4px 8px;
+  padding: 6px 10px;
 }
 
 tooltip label {
@@ -369,25 +416,69 @@ tooltip label {
   color: %[3]s;
 }
 
-headerbar button {
-  min-width: 36px;
-  min-height: 36px;
-  border-radius: 0;
+/* Side Panel / Settings Overlay */
+.side-panel {
+  background-color: rgba(13, 12, 10, 0.99);
+  border-left: 1px solid %[6]s;
+  min-width: 320px;
+  padding-bottom: 24px;
+  transform: translateX(100%%);
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease;
+  opacity: 0;
+  box-shadow: -16px 0 48px rgba(0,0,0,0.7);
+}
+.side-panel.visible {
+  transform: translateX(0);
+  opacity: 1;
 }
 
-headerbar button:not(.titlebutton) {
+/* Log Rows / Chat bubbles */
+.log-list {
+  background-color: transparent;
+  padding: 24px 0;
+}
+.log-row {
   padding: 0;
+  margin: 6px 24px;
+  border: none;
+  background: transparent;
 }
-
-.action-btn {
-  min-width: 36px;
-  min-height: 36px;
-  padding: 0;
+.log-entry {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  font-weight: 400;
+  color: %[4]s;
+  padding: 14px 20px;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+  border-radius: 2px;
+  transition: all 0.3s ease;
 }
-
-.action-btn > * {
-  min-width: 20px;
-  min-height: 20px;
+.log-info { /* USER */
+  color: %[3]s;
+  background-color: rgba(255, 255, 255, 0.04);
+  border-right: 4px solid %[5]s;
+  margin-left: 64px;
+}
+.log-ok { /* AI */
+  color: %[7]s;
+  background-color: rgba(122, 158, 110, 0.06);
+  border-left: 4px solid %[7]s;
+  margin-right: 64px;
+}
+.log-err { /* ERROR */
+  color: %[9]s;
+  background-color: rgba(201, 57, 26, 0.08);
+  border-left: 4px solid %[9]s;
+}
+.log-warn { /* SYSTEM / HINT */
+  color: #e0b44a;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  opacity: 0.8;
+  margin-top: 16px;
+  margin-bottom: 8px;
 }
 `,
 		EnsureHex(c.Bg), EnsureHex(c.Bg2), EnsureHex(c.Fg),

@@ -12,12 +12,17 @@ import (
 )
 
 func IconBtnContent(iconName, labelText string) *gtk.Box {
-	content := gtk.NewBox(gtk.OrientationHorizontal, 6)
+	content := gtk.NewBox(gtk.OrientationHorizontal, 0)
 	content.SetHAlign(gtk.AlignCenter)
+	content.SetVAlign(gtk.AlignCenter)
+	
 	img := gtk.NewImageFromIconName(iconName)
+	img.SetPixelSize(16)
 	content.Append(img)
+	
 	if labelText != "" {
 		lbl := gtk.NewLabel(labelText)
+		lbl.SetMarginStart(8)
 		content.Append(lbl)
 	}
 	return content
@@ -32,10 +37,18 @@ func IconBtn(iconName, labelText string) *gtk.Button {
 
 func MiniActionBtn(icon, label string, onClick func()) *gtk.Button {
 	btn := gtk.NewButton()
-	box := gtk.NewBox(gtk.OrientationHorizontal, 4)
-	box.Append(gtk.NewImageFromIconName(icon))
+	box := gtk.NewBox(gtk.OrientationHorizontal, 0)
+	box.SetHAlign(gtk.AlignCenter)
+	box.SetVAlign(gtk.AlignCenter)
+	
+	img := gtk.NewImageFromIconName(icon)
+	img.SetPixelSize(14)
+	box.Append(img)
+	
 	if label != "" {
-		box.Append(gtk.NewLabel(label))
+		lbl := gtk.NewLabel(label)
+		lbl.SetMarginStart(6)
+		box.Append(lbl)
 	}
 	btn.SetChild(box)
 	btn.AddCSSClass("mini-action-btn")
@@ -241,4 +254,12 @@ func NewTag(label string) *gtk.Label {
 
 type MenuAction struct {
 	Label string; Icon string; Danger bool; OnClick func()
+}
+
+func ApplyProgressGradient(w *gtk.Widget, percent int, accent, bg string) {
+	css := fmt.Sprintf("* { background-image: linear-gradient(to right, %s %d%%, %s %d%%); }",
+		accent, percent, bg, percent)
+	provider := gtk.NewCSSProvider()
+	provider.LoadFromData(css)
+	w.StyleContext().AddProvider(provider, gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 }
